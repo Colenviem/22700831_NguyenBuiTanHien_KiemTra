@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const initialProducts = [
-  { id: 1, name: 'Laptop Dell XPS', price: 25000000, category: 'Laptop', stock: 5 },
-  { id: 2, name: 'Chuột Logitech MX Master', price: 2000000, category: 'Phụ kiện', stock: 20 },
-  { id: 3, name: 'Bàn phím cơ Keychron K2', price: 1800000, category: 'Phụ kiện', stock: 12 },
-];
+const categories = ['Tất cả', 'Laptop', 'Phụ kiện', 'Thời trang', 'Gia dụng'];
 
 function ProductList() {
-  const [products, setProducts] = useState(initialProducts);
+  // Lấy danh sách sản phẩm từ localStorage hoặc dùng danh sách mặc định
+  const loadProducts = () => {
+    const savedProducts = localStorage.getItem('products');
+    return savedProducts ? JSON.parse(savedProducts) : [];
+  };
+
+  const [products, setProducts] = useState(loadProducts);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', category: '', stock: '' });
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Tất cả');
-  const categories = ['Tất cả', 'Laptop', 'Phụ kiện', 'Thời trang', 'Gia dụng'];
-
 
   const handleDelete = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
+    const updatedProducts = products.filter((product) => product.id !== id);
+    setProducts(updatedProducts);
+    localStorage.setItem('products', JSON.stringify(updatedProducts)); // Lưu lại vào localStorage
   };
 
   const handleChange = (e) => {
@@ -39,40 +41,25 @@ function ProductList() {
       stock: Number(stock),
     };
 
-    setProducts([...products, newItem]);
+    const updatedProducts = [...products, newItem];
+    setProducts(updatedProducts);
+    localStorage.setItem('products', JSON.stringify(updatedProducts)); // Lưu lại vào localStorage
+
     setNewProduct({ name: '', price: '', category: '', stock: '' });
   };
 
-//   const filteredProducts = products.filter((product) =>
-//     product.name.toLowerCase().includes(searchTerm.toLowerCase())
-//   );
-
-const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((product) => {
     const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory = categoryFilter === 'Tất cả' || product.category === categoryFilter;
     return matchSearch && matchCategory;
   });
-  
+
+  // Tính tổng số sản phẩm và tổng tồn kho
   const totalProducts = filteredProducts.length;
   const totalStock = filteredProducts.reduce((total, product) => total + product.stock, 0);
-  
+
   return (
     <div>
-        <div style={{ marginBottom: '10px' }}>
-        <label>Chọn danh mục: </label>
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-            {categories.map((cate, index) => (
-                <option key={index} value={cate} className='text-black'>{cate}</option>
-            ))}
-        </select>
-        </div>
-
-        <div style={{ marginTop: '20px' }}>
-        <h3>
-            Tổng số sản phẩm: {totalProducts} | Tổng tồn kho: {totalStock}
-        </h3>
-        </div>
-
       <h2>Thêm sản phẩm mới</h2>
       <form onSubmit={handleAdd} style={{ marginBottom: '20px' }}>
         <input type="text" name="name" placeholder="Tên sản phẩm" value={newProduct.name} onChange={handleChange} />
@@ -90,6 +77,15 @@ const filteredProducts = products.filter((product) => {
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{ marginBottom: '10px' }}
       />
+
+      <div style={{ marginBottom: '10px' }}>
+        <label>Chọn danh mục: </label>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+          {categories.map((cate, index) => (
+            <option key={index} value={cate}>{cate}</option>
+          ))}
+        </select>
+      </div>
 
       <table border="1" cellPadding="10">
         <thead>
@@ -120,6 +116,12 @@ const filteredProducts = products.filter((product) => {
           )}
         </tbody>
       </table>
+
+      <div style={{ marginTop: '20px' }}>
+        <h3>
+          Tổng số sản phẩm: {totalProducts} | Tổng tồn kho: {totalStock}
+        </h3>
+      </div>
     </div>
   );
 }

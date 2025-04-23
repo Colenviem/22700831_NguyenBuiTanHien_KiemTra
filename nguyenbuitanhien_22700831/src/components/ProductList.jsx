@@ -13,6 +13,7 @@ function ProductList() {
   const [categoryFilter, setCategoryFilter] = useState('Tất cả');
   const categories = ['Tất cả', 'Laptop', 'Phụ kiện', 'Thời trang', 'Gia dụng'];
 
+
   const handleDelete = (id) => {
     setProducts(products.filter((product) => product.id !== id));
   };
@@ -51,7 +52,10 @@ const filteredProducts = products.filter((product) => {
     const matchCategory = categoryFilter === 'Tất cả' || product.category === categoryFilter;
     return matchSearch && matchCategory;
   });
-
+  
+  const totalProducts = filteredProducts.length;
+  const totalStock = filteredProducts.reduce((total, product) => total + product.stock, 0);
+  
   return (
     <div>
         <div style={{ marginBottom: '10px' }}>
@@ -61,6 +65,12 @@ const filteredProducts = products.filter((product) => {
                 <option key={index} value={cate} className='text-black'>{cate}</option>
             ))}
         </select>
+        </div>
+
+        <div style={{ marginTop: '20px' }}>
+        <h3>
+            Tổng số sản phẩm: {totalProducts} | Tổng tồn kho: {totalStock}
+        </h3>
         </div>
 
       <h2>Thêm sản phẩm mới</h2>

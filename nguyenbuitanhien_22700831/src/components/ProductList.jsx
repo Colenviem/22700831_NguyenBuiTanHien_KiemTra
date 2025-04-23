@@ -59,42 +59,78 @@ function ProductList() {
   const totalStock = filteredProducts.reduce((total, product) => total + product.stock, 0);
 
   return (
-    <div>
-      <h2>Thêm sản phẩm mới</h2>
-      <form onSubmit={handleAdd} style={{ marginBottom: '20px' }}>
-        <input type="text" name="name" placeholder="Tên sản phẩm" value={newProduct.name} onChange={handleChange} />
-        <input type="number" name="price" placeholder="Giá" value={newProduct.price} onChange={handleChange} />
-        <input type="text" name="category" placeholder="Danh mục" value={newProduct.category} onChange={handleChange} />
-        <input type="number" name="stock" placeholder="Tồn kho" value={newProduct.stock} onChange={handleChange} />
-        <button type="submit">Thêm sản phẩm</button>
+    <div className="container mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4">Thêm sản phẩm mới</h2>
+      <form onSubmit={handleAdd} className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Tên sản phẩm"
+            value={newProduct.name}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+          <input
+            type="number"
+            name="price"
+            placeholder="Giá"
+            value={newProduct.price}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+          <input
+            type="text"
+            name="category"
+            placeholder="Danh mục"
+            value={newProduct.category}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+          <input
+            type="number"
+            name="stock"
+            placeholder="Tồn kho"
+            value={newProduct.stock}
+            onChange={handleChange}
+            className="border p-2 rounded"
+          />
+        </div>
+        <button type="submit" className="bg-blue-500 text-white py-2 px-6 rounded-lg mt-4">
+          Thêm sản phẩm
+        </button>
       </form>
 
-      <h2>Danh sách sản phẩm</h2>
+      <h2 className="text-2xl font-bold mb-4">Danh sách sản phẩm</h2>
       <input
         type="text"
         placeholder="Tìm kiếm theo tên..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: '10px' }}
+        className="border p-2 rounded mb-4 w-full"
       />
 
-      <div style={{ marginBottom: '10px' }}>
-        <label>Chọn danh mục: </label>
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+      <div className="mb-4">
+        <label className="mr-2">Chọn danh mục: </label>
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="border p-2 rounded"
+        >
           {categories.map((cate, index) => (
             <option key={index} value={cate}>{cate}</option>
           ))}
         </select>
       </div>
 
-      <table border="1" cellPadding="10">
+      <table className="min-w-full table-auto bg-white shadow-md rounded-lg">
         <thead>
-          <tr>
-            <th>Tên sản phẩm</th>
-            <th>Giá (VNĐ)</th>
-            <th>Danh mục</th>
-            <th>Tồn kho</th>
-            <th>Hành động</th>
+          <tr className="bg-gray-200">
+            <th className="px-4 py-2 text-left">Tên sản phẩm</th>
+            <th className="px-4 py-2 text-left">Giá (VNĐ)</th>
+            <th className="px-4 py-2 text-left">Danh mục</th>
+            <th className="px-4 py-2 text-left">Tồn kho</th>
+            <th className="px-4 py-2 text-left">Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -103,14 +139,14 @@ function ProductList() {
           ))}
           {filteredProducts.length === 0 && (
             <tr>
-              <td colSpan="5" align="center">Không tìm thấy sản phẩm nào</td>
+              <td colSpan="5" className="text-center py-4">Không tìm thấy sản phẩm nào</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      <div style={{ marginTop: '20px' }}>
-        <h3>
+      <div className="mt-6">
+        <h3 className="font-semibold text-lg">
           Tổng số sản phẩm: {totalProducts} | Tổng tồn kho: {totalStock}
         </h3>
       </div>

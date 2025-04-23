@@ -10,6 +10,8 @@ function ProductList() {
   const [products, setProducts] = useState(initialProducts);
   const [newProduct, setNewProduct] = useState({ name: '', price: '', category: '', stock: '' });
   const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('Tất cả');
+  const categories = ['Tất cả', 'Laptop', 'Phụ kiện', 'Thời trang', 'Gia dụng'];
 
   const handleDelete = (id) => {
     setProducts(products.filter((product) => product.id !== id));
@@ -40,12 +42,27 @@ function ProductList() {
     setNewProduct({ name: '', price: '', category: '', stock: '' });
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+//   const filteredProducts = products.filter((product) =>
+//     product.name.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+const filteredProducts = products.filter((product) => {
+    const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCategory = categoryFilter === 'Tất cả' || product.category === categoryFilter;
+    return matchSearch && matchCategory;
+  });
 
   return (
     <div>
+        <div style={{ marginBottom: '10px' }}>
+        <label>Chọn danh mục: </label>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+            {categories.map((cate, index) => (
+                <option key={index} value={cate} className='text-black'>{cate}</option>
+            ))}
+        </select>
+        </div>
+
       <h2>Thêm sản phẩm mới</h2>
       <form onSubmit={handleAdd} style={{ marginBottom: '20px' }}>
         <input type="text" name="name" placeholder="Tên sản phẩm" value={newProduct.name} onChange={handleChange} />

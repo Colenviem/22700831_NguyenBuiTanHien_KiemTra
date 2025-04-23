@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import ProductItem from './ProductItem';; // Import ProductItem component
 
 const categories = ['Tất cả', 'Laptop', 'Phụ kiện', 'Thời trang', 'Gia dụng'];
 
 function ProductList() {
-  // Lấy danh sách sản phẩm từ localStorage hoặc dùng danh sách mặc định
   const loadProducts = () => {
     const savedProducts = localStorage.getItem('products');
     return savedProducts ? JSON.parse(savedProducts) : [];
@@ -99,15 +99,7 @@ function ProductList() {
         </thead>
         <tbody>
           {filteredProducts.map((product) => (
-            <tr key={product.id}>
-              <td>{product.name}</td>
-              <td>{product.price.toLocaleString()}</td>
-              <td>{product.category}</td>
-              <td>{product.stock}</td>
-              <td>
-                <button onClick={() => handleDelete(product.id)}>Xoá</button>
-              </td>
-            </tr>
+            <ProductItem key={product.id} product={product} onDelete={handleDelete} />
           ))}
           {filteredProducts.length === 0 && (
             <tr>

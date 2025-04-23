@@ -1,18 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const sampleProducts = [
+const initialProducts = [
   { id: 1, name: 'Laptop Dell XPS', price: 25000000, category: 'Laptop', stock: 5 },
   { id: 2, name: 'Chuột Logitech MX Master', price: 2000000, category: 'Phụ kiện', stock: 20 },
   { id: 3, name: 'Bàn phím cơ Keychron K2', price: 1800000, category: 'Phụ kiện', stock: 12 },
 ];
 
 function ProductList() {
+  const [products, setProducts] = useState(initialProducts);
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    price: '',
+    category: '',
+    stock: '',
+  });
+
   const handleDelete = (id) => {
-    alert(`Xoá sản phẩm có ID: ${id}`);
+    setProducts(products.filter((product) => product.id !== id));
+  };
+
+  const handleChange = (e) => {
+    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  };
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    const { name, price, category, stock } = newProduct;
+
+    if (!name || !price || !category || !stock) {
+      alert('Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    const newItem = {
+      id: Date.now(),
+      name,
+      price: Number(price),
+      category,
+      stock: Number(stock),
+    };
+
+    setProducts([...products, newItem]);
+    setNewProduct({ name: '', price: '', category: '', stock: '' });
   };
 
   return (
     <div>
+      <h2>Thêm sản phẩm mới</h2>
+      <form onSubmit={handleAdd} style={{ marginBottom: '20px' }}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Tên sản phẩm"
+          value={newProduct.name}
+          onChange={handleChange}
+          className='border'
+        />
+        <input
+          type="number"
+          name="price"
+          placeholder="Giá"
+          value={newProduct.price}
+          onChange={handleChange}
+          className='border'
+        />
+        <input
+          type="text"
+          name="category"
+          placeholder="Danh mục"
+          value={newProduct.category}
+          onChange={handleChange}
+          className='border'
+        />
+        <input
+          type="number"
+          name="stock"
+          placeholder="Tồn kho"
+          value={newProduct.stock}
+          onChange={handleChange}
+          className='border'
+        />
+        <button type="submit">Thêm sản phẩm</button>
+      </form>
+
       <h2>Danh sách sản phẩm</h2>
       <table border="1" cellPadding="10">
         <thead>
@@ -25,7 +95,7 @@ function ProductList() {
           </tr>
         </thead>
         <tbody>
-          {sampleProducts.map((product) => (
+          {products.map((product) => (
             <tr key={product.id}>
               <td>{product.name}</td>
               <td>{product.price.toLocaleString()}</td>

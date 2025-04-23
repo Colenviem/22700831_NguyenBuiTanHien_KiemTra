@@ -8,12 +8,8 @@ const initialProducts = [
 
 function ProductList() {
   const [products, setProducts] = useState(initialProducts);
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    price: '',
-    category: '',
-    stock: '',
-  });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', category: '', stock: '' });
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleDelete = (id) => {
     setProducts(products.filter((product) => product.id !== id));
@@ -44,46 +40,30 @@ function ProductList() {
     setNewProduct({ name: '', price: '', category: '', stock: '' });
   };
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <h2>Thêm sản phẩm mới</h2>
       <form onSubmit={handleAdd} style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Tên sản phẩm"
-          value={newProduct.name}
-          onChange={handleChange}
-          className='border'
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Giá"
-          value={newProduct.price}
-          onChange={handleChange}
-          className='border'
-        />
-        <input
-          type="text"
-          name="category"
-          placeholder="Danh mục"
-          value={newProduct.category}
-          onChange={handleChange}
-          className='border'
-        />
-        <input
-          type="number"
-          name="stock"
-          placeholder="Tồn kho"
-          value={newProduct.stock}
-          onChange={handleChange}
-          className='border'
-        />
+        <input type="text" name="name" placeholder="Tên sản phẩm" value={newProduct.name} onChange={handleChange} />
+        <input type="number" name="price" placeholder="Giá" value={newProduct.price} onChange={handleChange} />
+        <input type="text" name="category" placeholder="Danh mục" value={newProduct.category} onChange={handleChange} />
+        <input type="number" name="stock" placeholder="Tồn kho" value={newProduct.stock} onChange={handleChange} />
         <button type="submit">Thêm sản phẩm</button>
       </form>
 
       <h2>Danh sách sản phẩm</h2>
+      <input
+        type="text"
+        placeholder="Tìm kiếm theo tên..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginBottom: '10px' }}
+      />
+
       <table border="1" cellPadding="10">
         <thead>
           <tr>
@@ -95,7 +75,7 @@ function ProductList() {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product.id}>
               <td>{product.name}</td>
               <td>{product.price.toLocaleString()}</td>
@@ -106,6 +86,11 @@ function ProductList() {
               </td>
             </tr>
           ))}
+          {filteredProducts.length === 0 && (
+            <tr>
+              <td colSpan="5" align="center">Không tìm thấy sản phẩm nào</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
